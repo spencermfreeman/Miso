@@ -1,98 +1,172 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { Image } from 'react-native';
+import { useRouter } from 'expo-router';
+import {
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from 'react-native';
+import { BottomNav } from '../components/BottomNav';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+// ─── placeholder colours ──────────────────────────────────────────────────────
+const CARD_BG         = '#F4F1EB';
+const ACCENT          = '#D97B4A';
+const SOFT_GREEN      = '#7BAF7B';
+
+// ─── mock data ────────────────────────────────────────────────────────────────
+const FEED = [
+  { id: '1', user: 'Sawyer', time: '14h', caption: 'Tomato Basil Soup 🍅', liked: false, image: require('../../assets/images/tomatoSoup.jpeg') },
+  { id: '2', user: 'Katie',  time: '16h', caption: 'Spicy Ramen Night 🍜',  liked: true,  image: require('../../assets/images/spicyRamen.jpeg') },
+  { id: '3', user: 'Sara',   time: '1d',  caption: 'Greek Salad prep 🥗',   liked: false, image: require('../../assets/images/greekSalad.jpeg') },
+];
+
+type EnergyLevel = 'drained' | 'busy' | 'great' | null;
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const [energy, setEnergy]       = useState<EnergyLevel>(null);
+  const [showReset, setShowReset] = useState(true);
+  const [feed, setFeed]           = useState(FEED);
+  const router = useRouter();
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  const toggle = (id: string) =>
+    setFeed(f => f.map(p => p.id === id ? { ...p, liked: !p.liked } : p));
+
+  const energyConfig: { key: EnergyLevel; label: string; emoji: string }[] = [
+    { key: 'drained', label: 'Drained',       emoji: '😓' },
+    { key: 'busy',    label: 'Busy but okay', emoji: '😅' },
+    { key: 'great',   label: 'Back on track', emoji: '💪' },
+  ];
+
+  const mealSuggestions: Record<string, string[]> = {
+    drained: ['Chicken Soup', 'Greek Salad', 'Stir Fry'],
+    busy:    ['Stir Fry', 'Pasta Bolognese', 'Stuffed Peppers'],
+    great:   ['Spanakopita', 'Homemade Ramen', 'Greek Salad'],
+  };
+
+  return (
+    <SafeAreaView style={s.safe}>
+      <ScrollView contentContainerStyle={s.scroll}>
+
+        {/* ── Header ───────────────────────────────────────── */}
+        <View style={s.header}>
+          <Text style={s.logo}>🍲 Miso </Text>
+          <TouchableOpacity onPress={() => router.push('/(tabs)/ProfileScreen' as any)}>
+            <View style={s.avatarSmall}><Text style={s.avatarTxt}>You</Text></View>
+          </TouchableOpacity>
+        </View>
+
+        {/* ── Reset My Week card ───────────────────────────── */}
+        {showReset && (
+          <View style={s.resetCard}>
+            <View style={s.resetHeader}>
+              <Text style={s.resetTitle}>Reset My Week 🔄</Text>
+              <TouchableOpacity onPress={() => setShowReset(false)}>
+                <Text style={s.dismiss}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={s.resetSub}>How's your energy lately?</Text>
+            <View style={s.energyRow}>
+              {energyConfig.map(({ key, label, emoji }) => (
+                <TouchableOpacity
+                  key={key}
+                  style={[s.energyBtn, energy === key && s.energyBtnActive]}
+                  onPress={() => setEnergy(key)}
+                >
+                  <Text style={s.energyEmoji}>{emoji}</Text>
+                  <Text style={[s.energyLabel, energy === key && s.energyLabelActive]}>
+                    {label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {energy && (
+              <View style={s.suggestionBox}>
+                <Text style={s.suggestionTitle}>
+                  {energy === 'drained' ? '🛋 Recovery Mode — Minimal Prep' :
+                   energy === 'busy'    ? '⚡ Quick Wins this Week' :
+                                          '🌟 Cooking in Full Swing'}
+                </Text>
+                {mealSuggestions[energy].map(m => (
+                  <Text key={m} style={s.suggestionItem}>• {m}</Text>
+                ))}
+                <TouchableOpacity
+                  style={s.viewRecipesBtn}
+                  onPress={() => router.push('/(tabs)/RecipesScreen' as any)}
+                >
+                  <Text style={s.viewRecipesTxt}>View My Recipes →</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+        )}
+
+        {/* ── Friends' Food Feed ───────────────────────────── */}
+        <Text style={s.sectionTitle}>Friends' Food 👫</Text>
+        {feed.map(post => (
+          <View key={post.id} style={s.feedCard}>
+            <Image
+              source={post.image}
+              style={s.feedImg}
+              resizeMode="cover"
+            />
+            <View style={s.feedFooter}>
+              <View>
+                <Text style={s.feedUser}>{post.user}</Text>
+                <Text style={s.feedCaption}>{post.caption}</Text>
+                <Text style={s.feedTime}>{post.time} ago</Text>
+              </View>
+              <TouchableOpacity onPress={() => toggle(post.id)}>
+                <Text style={s.heart}>{post.liked ? '♥️' : '🤍'}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ))}
+
+        <View style={{ height: 90 }} />
+      </ScrollView>
+
+      <BottomNav current="Home" />
+    </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
+// ─── styles ──────────────────────────────────────────────────────────────────
+const s = StyleSheet.create({
+  safe:               { flex: 1, backgroundColor: '#FAFAF7' },
+  scroll:             { padding: 16 },
+  header:             { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 },
+  logo:               { fontSize: 26, fontWeight: '800', color: ACCENT },
+  avatarSmall:        { width: 38, height: 38, borderRadius: 19, backgroundColor: SOFT_GREEN, justifyContent: 'center', alignItems: 'center' },
+  avatarTxt:          { color: '#fff', fontWeight: '700', fontSize: 12 },
+
+  resetCard:          { backgroundColor: CARD_BG, borderRadius: 16, padding: 16, marginBottom: 20, borderWidth: 1, borderColor: '#E0D8CC' },
+  resetHeader:        { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  resetTitle:         { fontSize: 17, fontWeight: '700', color: '#333' },
+  dismiss:            { fontSize: 16, color: '#999' },
+  resetSub:           { marginTop: 8, marginBottom: 12, fontSize: 13, color: '#666' },
+  energyRow:          { flexDirection: 'row', gap: 8 },
+  energyBtn:          { flex: 1, alignItems: 'center', padding: 10, borderRadius: 12, backgroundColor: '#EDE8E0', borderWidth: 1.5, borderColor: 'transparent' },
+  energyBtnActive:    { borderColor: ACCENT, backgroundColor: '#FDF0E8' },
+  energyEmoji:        { fontSize: 20 },
+  energyLabel:        { fontSize: 11, color: '#666', marginTop: 4, textAlign: 'center' },
+  energyLabelActive:  { color: ACCENT, fontWeight: '700' },
+
+  suggestionBox:      { marginTop: 14, backgroundColor: '#fff', borderRadius: 10, padding: 12 },
+  suggestionTitle:    { fontWeight: '700', color: '#333', marginBottom: 6 },
+  suggestionItem:     { color: '#555', marginVertical: 2, fontSize: 13 },
+  viewRecipesBtn:     { marginTop: 10, alignSelf: 'flex-end' },
+  viewRecipesTxt:     { color: ACCENT, fontWeight: '700', fontSize: 13 },
+
+  sectionTitle:       { fontSize: 17, fontWeight: '700', color: '#333', marginBottom: 12 },
+  feedCard:           { backgroundColor: '#fff', borderRadius: 14, marginBottom: 16, overflow: 'hidden', shadowColor: '#000', shadowOpacity: 0.07, shadowRadius: 6, elevation: 2 },
+  feedImg:            { width: '100%', height: 180 },
+  feedFooter:         { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', padding: 12 },
+  feedUser:           { fontWeight: '700', fontSize: 14, color: '#333' },
+  feedCaption:        { fontSize: 13, color: '#555', marginTop: 2 },
+  feedTime:           { fontSize: 11, color: '#999', marginTop: 4 },
+  heart:              { fontSize: 24 },
 });
