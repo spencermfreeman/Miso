@@ -2,16 +2,23 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+## 📱 App Preview
+
+<p align="center">
+  <img src="./assets/screenshots/IMG_9951.PNG" width="22%" alt="Screenshot 1" />
+  <img src="./assets/screenshots/IMG_9952.PNG" width="22%" alt="Screenshot 2" />
+  <img src="./assets/screenshots/IMG_9953.PNG" width="22%" alt="Screenshot 3" />
+  <img src="./assets/screenshots/IMG_9954.PNG" width="22%" alt="Screenshot 4" />
+</p>
+
 ## Get started
 
 1. Install dependencies
-
    ```bash
    npm install
    ```
 
 2. Start the app
-
    ```bash
    npx expo start
    ```
