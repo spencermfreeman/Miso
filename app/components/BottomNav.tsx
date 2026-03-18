@@ -7,7 +7,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const ACCENT = '#D97B4A';
 
-type Tab = 'Home' | 'Events' | 'Recipes' | 'Profile';
+type Tab = 'Home' | 'Events' | 'Recipes' | 'Profile' | 'Dashboard';
 
 interface BottomNavProps {
   current: Tab;
@@ -19,6 +19,7 @@ export function BottomNav({ current }: BottomNavProps) {
     { label: 'Events',  icon: '📅', route: '/(tabs)/EventsScreen'},
     { label: 'Recipes', icon: '📖', route: '/(tabs)/RecipesScreen'},
     { label: 'Profile', icon: '👤', route: '/(tabs)/ProfileScreen'},
+    { label: 'Dashboard', icon: '📋', route: '/(tabs)/DashboardScreen'},
   ];
   const router = useRouter();
   return (
