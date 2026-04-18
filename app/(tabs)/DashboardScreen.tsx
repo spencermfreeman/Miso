@@ -3,12 +3,11 @@
 //  Saved-recipe dashboard: import by URL, filter/sort, view details
 // ─────────────────────────────────────────────────────────────────────────────
 
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Alert,
   FlatList,
   Modal,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -16,6 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomNav } from '../components/BottomNav';
 
 // ─── theme ────────────────────────────────────────────────────────────────────
@@ -160,7 +160,7 @@ function AddLinkModal({
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#FAFAF7' }}>
+      <View style={{ flex: 1, backgroundColor: '#FAFAF7', paddingTop: 20 }}>
         <View style={al.header}>
           <Text style={al.heading}>Save a Recipe</Text>
           <TouchableOpacity onPress={onClose}><Text style={al.cancel}>Cancel</Text></TouchableOpacity>
@@ -230,7 +230,7 @@ function AddLinkModal({
             <Text style={al.saveBtnTxt}>Save Recipe</Text>
           </TouchableOpacity>
         </ScrollView>
-      </SafeAreaView>
+      </View>
     </Modal>
   );
 }
@@ -256,7 +256,7 @@ function DetailModal({
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#FAFAF7' }}>
+      <View style={{ flex: 1, backgroundColor: '#FAFAF7', paddingTop: 20 }}>
         <View style={dm.header}>
           <TouchableOpacity onPress={onClose}><Text style={dm.back}>← Back</Text></TouchableOpacity>
           <TouchableOpacity onPress={confirmDelete}><Text style={dm.del}>Remove</Text></TouchableOpacity>
@@ -309,7 +309,7 @@ function DetailModal({
           </TouchableOpacity>
 
         </ScrollView>
-      </SafeAreaView>
+      </View>
     </Modal>
   );
 }
@@ -405,6 +405,7 @@ function FilterBar({
 
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 export default function DashboardScreen() {
+  const insets = useSafeAreaInsets();
   const [recipes, setRecipes]         = useState<SavedRecipe[]>(SEED);
   const [search, setSearch]           = useState('');
   const [activeTag, setActiveTag]     = useState('All');
@@ -443,7 +444,7 @@ export default function DashboardScreen() {
     setRecipes(prev => [r, ...prev]);
 
   return (
-    <SafeAreaView style={ds.safe}>
+    <View style={[ds.safe, { paddingTop: insets.top }]}>
 
       {/* ── Header ────────────────────────────────────────── */}
       <View style={ds.header}>
@@ -536,7 +537,7 @@ export default function DashboardScreen() {
         onClose={() => setShowDetail(false)}
         onDelete={deleteRecipe}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 

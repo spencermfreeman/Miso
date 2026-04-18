@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
     Alert,
     FlatList,
     Modal,
-    SafeAreaView,
     ScrollView,
     StyleSheet,
     Text,
@@ -107,7 +107,7 @@ function GroceryModal({
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#FAFAF7' }}>
+      <View style={{ flex: 1, backgroundColor: '#FAFAF7', paddingTop: 20 }}>
         <View style={gm.header}>
           <Text style={gm.title}>🛒 Grocery List</Text>
           <TouchableOpacity onPress={onClose}><Text style={gm.close}>Done</Text></TouchableOpacity>
@@ -137,7 +137,7 @@ function GroceryModal({
           ))}
           <View style={{ height: 40 }} />
         </ScrollView>
-      </SafeAreaView>
+      </View>
     </Modal>
   );
 }
@@ -154,7 +154,7 @@ function RecipeDetailModal({
   if (!recipe) return null;
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#FAFAF7' }}>
+      <View style={{ flex: 1, backgroundColor: '#FAFAF7', paddingTop: 20 }}>
         <View style={rd.header}>
           <TouchableOpacity onPress={onClose}><Text style={rd.back}>← Back</Text></TouchableOpacity>
           {recipe.isFamily && <View style={rd.familyBadge}><Text style={rd.familyTxt}>👨‍👩‍👧 Family Recipe</Text></View>}
@@ -191,7 +191,7 @@ function RecipeDetailModal({
             <Text style={rd.groceryBtnTxt}>+ Add to Grocery List</Text>
           </TouchableOpacity>
         </ScrollView>
-      </SafeAreaView>
+      </View>
     </Modal>
   );
 }
@@ -224,7 +224,7 @@ function AddRecipeModal({ visible, onClose, onSave }: {
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#FAFAF7' }}>
+      <View style={{ flex: 1, backgroundColor: '#FAFAF7', paddingTop: 20 }}>
         <View style={ar.header}>
           <Text style={ar.title}>New Recipe</Text>
           <TouchableOpacity onPress={onClose}><Text style={ar.cancel}>Cancel</Text></TouchableOpacity>
@@ -261,13 +261,14 @@ function AddRecipeModal({ visible, onClose, onSave }: {
             <Text style={ar.saveBtnTxt}>Save Recipe</Text>
           </TouchableOpacity>
         </ScrollView>
-      </SafeAreaView>
+      </View>
     </Modal>
   );
 }
 
 // ─── main screen ─────────────────────────────────────────────────────────────
 export default function RecipesScreen({ navigation }: any) {
+  const insets = useSafeAreaInsets();
   const [recipes, setRecipes]           = useState<Recipe[]>(SEED_RECIPES);
   const [activeTag, setActiveTag]       = useState('All');
   const [search, setSearch]             = useState('');
@@ -287,7 +288,7 @@ export default function RecipesScreen({ navigation }: any) {
     setGroceryList(prev => prev.find(p => p.id === r.id) ? prev : [...prev, r]);
 
   return (
-    <SafeAreaView style={ms.safe}>
+    <View style={[ms.safe, { paddingTop: insets.top }]}>
       {/* search */}
       <View style={ms.searchRow}>
         <TextInput
@@ -367,7 +368,7 @@ export default function RecipesScreen({ navigation }: any) {
         visible={showGrocery}
         onClose={() => setShowGrocery(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
