@@ -7,7 +7,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const ACCENT = '#D97B4A';
 
-type Tab = 'Events' | 'Recipes' | 'Home' | 'Profile' | 'Dashboard';
+type Tab =  'Recipes' | 'Events' | 'Home' | 'Dashboard' | 'Profile';
 
 interface BottomNavProps {
   current: Tab;
