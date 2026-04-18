@@ -5,10 +5,11 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 ## 📱 App Preview
 
 <p align="center">
-  <img src="./README_Images/IMG_9951.PNG" width="22%" alt="Screenshot 1" />
-  <img src="./README_Images/IMG_9952.PNG" width="22%" alt="Screenshot 2" />
-  <img src="./README_Images/IMG_9953.PNG" width="22%" alt="Screenshot 3" />
-  <img src="./README_Images/IMG_9954.PNG" width="22%" alt="Screenshot 4" />
+  <img src="./README_Images/IMG_0090.PNG" width="18%" alt="Screenshot 1" />
+  <img src="./README_Images/IMG_0091.PNG" width="18%" alt="Screenshot 2" />
+  <img src="./README_Images/IMG_0092.PNG" width="18%" alt="Screenshot 3" />
+  <img src="./README_Images/IMG_0093.PNG" width="18%" alt="Screenshot 4" />
+  <img src="./README_Images/IMG_0094.PNG" width="18%" alt="Screenshot 5" />
 </p>
 
 ## Get started
