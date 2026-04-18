@@ -15,11 +15,11 @@ interface BottomNavProps {
 
 export function BottomNav({ current }: BottomNavProps) {
   const tabs: { label: Tab; icon: string; route: string }[] = [
-    { label: 'Events',  icon: '📅', route: '/(tabs)/EventsScreen'},
     { label: 'Recipes', icon: '📖', route: '/(tabs)/RecipesScreen'},
+    { label: 'Events',  icon: '📅', route: '/(tabs)/EventsScreen'},
     { label: 'Home',    icon: '🏠', route: '/(tabs)'},
-    { label: 'Profile', icon: '👤', route: '/(tabs)/ProfileScreen'},
     { label: 'Dashboard', icon: '📋', route: '/(tabs)/DashboardScreen'},
+    { label: 'Profile', icon: '👤', route: '/(tabs)/ProfileScreen'},
   ];
   const router = useRouter();
   return (
